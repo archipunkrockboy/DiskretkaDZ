@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskretkaDZ", "DiskretkaDZ\DiskretkaDZ.csproj", "{B3C86D6A-9DE5-46F4-9CF9-DF1D27DB5530}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DZ1", "DiskretkaDZ\DZ1.csproj", "{B3C86D6A-9DE5-46F4-9CF9-DF1D27DB5530}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
