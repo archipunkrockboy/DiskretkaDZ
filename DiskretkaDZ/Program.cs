@@ -15,11 +15,11 @@ namespace DiskretkaDZ
         }
         public PlacementsWithRep Next(string alph, int k)
         {
-            bool perepoln = false;
+            //bool perepoln = false;
             string b = this.INFO;
             for (int i = 0; i < k; i++)
             {
-                if (!perepoln && b[b.Length - 1 - i] == alph[alph.Length - 1])
+                if (/*!perepoln *//*&&*/ b[b.Length - 1 - i] == alph[alph.Length - 1])
                 {
                     b = b.Remove(b.Length - 1 - i, 1);
                     b = b.Insert(b.Length - i, Convert.ToString(alph[0]));
