@@ -6,13 +6,25 @@ using System.Threading.Tasks;
 using System.IO;
 namespace DiskretkaDZ
 {
-    public class PlacementsWithRep
+    public class CombObj
     {
-        private string info;      
-        public PlacementsWithRep(string info)
+        private string info;
+        public CombObj(string info)
         {
             this.info = info;
         }
+        public string INFO
+        {
+            get { return info; }
+            set { info = value; }
+        }
+    }
+
+    //размещения с повторениями
+    public class PlacementsWithRep : CombObj
+    {      
+        public PlacementsWithRep(string info) : base(info)
+        { }
         public PlacementsWithRep Next(string alph, int k)
         {
             
@@ -50,25 +62,11 @@ namespace DiskretkaDZ
                 c += Convert.ToString(b);
             if (this.INFO == c) return false;
             else return true;
-        }    
-        public string INFO
-        {
-            get { return info; }
-            set { info = value; }
-        }
+        }          
     }
     public class Placements
     {
-        private string info;
-        public bool Next(string alph, int m)
-        {
-            int j;
-            do
-            {
-                j = alph.Length - 1;
-                while(j!=-1&&string[j])
-            }
-        }
+        private string info;      
         public string Swap(string s, int i, int j)
         {
             string s1 = Convert.ToString(s[i]);
@@ -86,55 +84,35 @@ namespace DiskretkaDZ
         }
     }
 
-    public class Permutations
-    {
-        private string info;
-
-        public Permutations(string s)
-        {
-            this.info = s;
-        }
-        ////public Permutations Next(string alph)
-        ////{
-        ////    string a = this.INFO;
-        ////    int j = 0;
-        ////    for (int i = 0; i < alph.Length; i++)
-        ////    {
-        ////        a = a.Remove(i, 1);
-        ////        a = a.Insert(i, Convert.ToString(alph[i]));
-        ////        j = 1;    
-        ////    }
-        ////    while (j != 0)
-        ////    {
-        ////        Console.WriteLine(a);
-        ////        j = alph.Length - 1;
-        ////        while(a[i]>a[i+1])
-
-        ////    }
+    //перестановки
+    public class Permutations : CombObj
+    {      
+        public Permutations(string info): base(info)
+        { }
 
         public Permutations Nayarana(string alph)
         {
-            int rigth = 0;
+            int right = 0;
             int zap = 0;
             for (int i = 0; i < alph.Length; i++)
             {
-                if (alph[Index(alph, info[info.Length - i - 2])] < alph[Index(alph, info[info.Length - i - 1])])
+                if (alph[Index(alph, this.INFO[this.INFO.Length - i - 2])] < alph[Index(alph, this.INFO[this.INFO.Length - i - 1])])
                 {
-                    rigth = Index(alph, info[alph.Length - i - 2]);
+                    right = Index(alph, this.INFO[alph.Length - i - 2]);
                     break;
                 }
             }
             for (int i = 0; i < alph.Length; i++)
             {
-                if (alph[rigth] < alph[Index(alph, info[alph.Length - i - 1])])
+                if (alph[right] < alph[Index(alph, this.INFO[alph.Length - i - 1])])
                 {
-                    zap = Index(alph, info[alph.Length - i - 1]);
+                    zap = Index(alph, this.INFO[alph.Length - i - 1]);
                     break;
                 }
             }
-            string s = info;
-            s = Swap(s, rigth, zap);
-            Permutations a = new Permutations(Reverse(s, zap));
+            string s = this.INFO;
+            s = Swap(s, right, zap);
+            Permutations a = new Permutations(Reverse(s, right+1));
             return a;
         }
 
@@ -155,7 +133,7 @@ namespace DiskretkaDZ
         {
             for (int i = 0; i < alph.Length; i++) 
             {
-                if (info[i] != alph[alph.Length - 1 - i]) return true;
+                if (this.INFO[i] != alph[alph.Length - 1 - i]) return true;
             }
             return false;
         }
@@ -181,11 +159,11 @@ namespace DiskretkaDZ
             return s;
         }
 
-        public string INFO
-        {
-            get { return info; }
-            set { info = value; }
-        }
+        //public string INFO
+        //{
+        //    get { return info; }
+        //    set { info = value; }
+        //}
     }
     class Program
     {
@@ -208,14 +186,14 @@ namespace DiskretkaDZ
 
             //int k = 3;
             //string s = "";
-            //for (int i = 0;i<k;i++)
+            //for (int i = 0; i < k; i++)
             //{
             //    s += alph[0];
             //}
             //PlacementsWithRep a = new PlacementsWithRep(s);
             //StreamWriter writer = new StreamWriter("PlacementsWithRep.txt");
             //writer.WriteLine(a.INFO);
-            //while (a.HasNext(alph[alph.Length-1], k))
+            //while (a.HasNext(alph[alph.Length - 1], k))
             //{
             //    a = a.Next(alph, k);
             //    Console.WriteLine(a.INFO);
@@ -237,18 +215,14 @@ namespace DiskretkaDZ
             {
                 alph += s[i];
             }
-
             Permutations p = new Permutations(alph);
-            for (int i = 0;i <10;i++)
-            { 
+            do
+            {
                 Console.WriteLine(p.INFO);
                 p = p.Nayarana(p.INFO);
-            }
-            //for (int i = 0; i < alph.Length; i++)
-            //{
-            //    if (info[i] != alph[alph.Length - 1 - i]) return true;
-            //}
-            //return false;
+            } while ((p.HasNext(alph)));
+            Console.WriteLine(p.INFO);
+           
 
 
 
