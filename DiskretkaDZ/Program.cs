@@ -64,9 +64,108 @@ namespace DiskretkaDZ
             else return true;
         }          
     }
-    public class Placements
+    //размещения
+    public class Placements : CombObj
     {
-        private string info;      
+        private string alph;
+        public Placements(string info) : base(info)
+        {}
+        public Placements(string info, string alph) : base(info)
+        {
+            this.alph = alph;
+        }
+        public Placements Next(string t, int k)
+        {
+            this.alph = t;
+            string s = Convert.ToString(alph[k-1]);
+            string min = "element not found";
+            int imin = -1;
+            for (int i = k; i < alph.Length; i++) 
+            {
+                if (alph[i] > alph[k - 1])
+                {
+                    if (min == "element not found")
+                    {
+                        min = Convert.ToString(alph[i]);
+                        imin = i;
+                    }
+                    else if (alph[i]<Convert.ToChar(min))
+                    {
+                        min = Convert.ToString(alph[i]);
+                        imin = i;
+                    }
+                }
+            }
+            if (min != "element not found")
+            {
+                alph = Swap(alph, k - 1, imin);
+                return new Placements(alph.Remove(k), alph);
+            }
+            else
+            {
+                alph = Reverse(alph, k);
+                int right = -1;
+                for (int i = 0; i < k-1; i++)
+                {                
+                    if (alph[k - 2 - i] < alph[k - 1 - i])
+                    {
+                        min = Convert.ToString(alph[k - 2 - i]);
+                        right = k - 2 - i;
+                        break;
+                    }
+                }
+                if (min != "element not found")//tut
+                {
+                    string min1 = "element not found";
+                    int imin1 = -1;
+                    int j = -1;
+                    for (int i = right; i < alph.Length; i++)
+                    {
+                        if (alph[i] > alph[right])
+                        {
+                            if (min1 == "element not found")
+                            {
+                                min1 = Convert.ToString(alph[i]);
+                                imin1 = i;
+                            }
+                            else if (alph[i] < Convert.ToChar(min1))
+                            {
+                                min1 = Convert.ToString(alph[i]);
+                                imin1 = i;
+                            }
+                        }
+                    }
+                    alph = Swap(alph, imin1, right);
+                    alph = Reverse(alph, right + 1);
+                    return new Placements(alph.Remove(k), alph);
+                }
+                else return new Placements("element not found", alph);
+            }
+        }
+        public int Index(string alph, char a)
+        {
+            for (int i = 0; i < alph.Length; i++)
+            {
+                if (alph[i] == a)
+                {
+                    return i;
+                }
+            }
+            return 0;
+        }
+        public string Reverse(string s, int i)
+        {
+            string s1 = s;
+            s1 = s1.Remove(0, i);
+            string s2 = "";
+            for (int j = 0; j < s1.Length; j++)
+            {
+                s2 += Convert.ToString(s1[s1.Length - 1 - j]);
+            }
+            s = s.Remove(i, s.Length - i);
+            s += s2;
+            return s;
+        }
         public string Swap(string s, int i, int j)
         {
             string s1 = Convert.ToString(s[i]);
@@ -76,11 +175,11 @@ namespace DiskretkaDZ
             s = s.Remove(i, 1);
             s = s.Insert(i, s2);
             return s;
-        }
-        public string INFO
+        }     
+        public string ALPH
         {
-            get { return info; }
-            set { info = value; }
+            get { return alph; }
+            set { alph = value; }
         }
     }
 
@@ -90,7 +189,8 @@ namespace DiskretkaDZ
         public Permutations(string info): base(info)
         { }
 
-        public Permutations Nayarana(string alph)
+        //алгоритм Найараны
+        public Permutations Next(string alph)
         {
             int right = 0;
             int zap = 0;
@@ -158,12 +258,6 @@ namespace DiskretkaDZ
             s = s.Insert(i, s2);
             return s;
         }
-
-        //public string INFO
-        //{
-        //    get { return info; }
-        //    set { info = value; }
-        //}
     }
     class Program
     {
@@ -183,7 +277,6 @@ namespace DiskretkaDZ
         }
         static void Main(string[] args)
         {
-
             //int k = 3;
             //string s = "";
             //for (int i = 0; i < k; i++)
@@ -201,28 +294,37 @@ namespace DiskretkaDZ
             //}
             //writer.Close();
 
-            Console.WriteLine("Количество элементов: ");
-            int n = Convert.ToInt32(Console.ReadLine());
-            char[] s = new char[n];
-            Console.WriteLine("Заполните алфавит: ");
-            for (int i = 0; i < n; i++)
-            {
-                s[i] = Convert.ToChar(Console.ReadLine());
-            }
-            string alph = "";
-            Array.Sort(s);
-            for (int i = 0; i < n; i++)
-            {
-                alph += s[i];
-            }
-            Permutations p = new Permutations(alph);
-            do
-            {
-                Console.WriteLine(p.INFO);
-                p = p.Nayarana(p.INFO);
-            } while ((p.HasNext(alph)));
-            Console.WriteLine(p.INFO);
-           
+            //Console.WriteLine("Количество элементов: ");
+            //int n = Convert.ToInt32(Console.ReadLine());
+            //char[] s = new char[n];
+            //Console.WriteLine("Заполните алфавит: ");
+            //for (int i = 0; i < n; i++)
+            //{
+            //    s[i] = Convert.ToChar(Console.ReadLine());
+            //}
+            //string alph = "";
+            //Array.Sort(s);
+            //for (int i = 0; i < n; i++)
+            //{
+            //    alph += s[i];
+            //}
+            //Permutations p = new Permutations(alph);
+            //do
+            //{
+            //    Console.WriteLine(p.INFO);
+            //    p = p.Next(p.INFO);
+            //} while ((p.HasNext(alph)));
+            //Console.WriteLine(p.INFO);
+
+            //string alph = "01234";
+            //Placements a = new Placements("012");
+            //a.ALPH = alph;
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    Console.WriteLine(a.INFO);
+            //    a = a.Next(a.ALPH, 3);
+            //}
+
 
 
 
