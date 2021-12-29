@@ -77,7 +77,7 @@ namespace DiskretkaDZ
         public Placements Next(string t, int k)
         {
             this.alph = t;
-            string s = Convert.ToString(alph[k-1]);
+            string s = Convert.ToString(alph[k - 1]);
             string min = "element not found";
             int imin = -1;
             for (int i = k; i < alph.Length; i++) 
@@ -114,7 +114,7 @@ namespace DiskretkaDZ
                         break;
                     }
                 }
-                if (min != "element not found")//tut
+                if (min != "element not found")
                 {
                     string min1 = "element not found";
                     int imin1 = -1;
@@ -259,22 +259,113 @@ namespace DiskretkaDZ
             return s;
         }
     }
-    class Program
-    {
-        static void Reverse(string s, int i)
+    public class Subsets: CombObj
+    {      
+        public Subsets(string info) : base(info)
+        { }
+        public Subsets Next(int i, string s)
         {
-            string s1 = s;
-            s1 = s1.Remove(0, i);
-            string s2 = "";
-            for (int j = 0; j < s1.Length; j++)
+            List<int> a = Index(i, s);
+            string s1 = "";
+            for (int j = 0; j < s.Length; j++) 
             {
-                s2 += Convert.ToString(s1[s1.Length - 1 - j]);
+                if (a[j] == 1) s1 += s[j];
             }
-            s = s.Remove(i, s.Length-i);
-            s += s2;
-            Console.WriteLine(s);
-
+            return new Subsets(s1);
         }
+        public bool HasNext(string s)
+        {
+            if (this.INFO == Last(s).INFO) return false;
+            else return true;
+        }
+        public Subsets Last(string s)
+        {
+            string s1 = "";
+            for (int i = 0; i < s.Length; i++) s1 += s[s.Length - 1];
+            return new Subsets(s1);
+        }
+        public List<int> Index(int x, string s)
+        {
+            List<int> a = new List<int>();
+            while (x != 0) 
+            {
+                if (x % 2 == 1) a.Add(1);
+                else a.Add(0);
+                x /= 2;
+            }
+            while(a.Count!=Last(s).INFO.Length)
+            {
+                a.Add(0);
+            }
+            a.Reverse();
+            return a;
+        }
+    }
+    public class Combinations
+    {
+        int[] info;
+        int[] a;
+        public Combinations()
+        { }
+        public Combinations(int[] info)
+        {
+            this.info = info;
+        }
+        public Combinations Next(int[]a, int n, int k)
+        {
+            int[] b = new int[k+2];
+            for (int i = 0; i < k; i++) b[i] = a[i];
+            b[k] = n; b[k + 1] = 0;
+            for (int i = 0;i<b.Length;i++)
+            {
+                if(b[i]+1 == b[i+1])
+                {
+                    b[i] = i;
+                }
+                else
+                {
+                    if (i < k)
+                    {
+                        b[i]++;
+                        int[] c = new int[k];
+                        for (int j = 0; j < c.Length; j++) c[j] = b[j];
+                        Combinations t = new Combinations(c);
+                        t.a = b;
+                        return t;
+                    }
+                    else return new Combinations();
+                }
+            }
+            return new Combinations(b);
+        }
+        public bool HasNext(int k, int n)
+        {
+            for (int i = 0; i < k; i++)
+            {
+                if (info[i] + k - i != n) return true;
+            }
+            return false;
+        }
+        public void Print(int k)
+        {
+            for (int i = 0; i < k; i++)
+                Console.Write("{0} ", info[i]);
+        }
+        public int[]INFO
+        { 
+            get { return info; }
+            set { info = value; }
+        }
+        public int[]A
+        {
+            get { return a; }
+            set { a = value; }
+        }
+
+    }
+
+    class Program
+    {      
         static void Main(string[] args)
         {
             //int k = 3;
@@ -325,10 +416,32 @@ namespace DiskretkaDZ
             //    a = a.Next(a.ALPH, 3);
             //}
 
+            //string s = "abcd";
+            //Subsets a = new Subsets(s);
+            //int j = 0;
+            //while(a.HasNext(s))
+            //{
+            //    a = a.Next(j, s);
+            //    Console.WriteLine(a.INFO);
+            //    j++;
+            //}
 
-
-
-
+            //Console.WriteLine("n: ");
+            //int n = Convert.ToInt32(Console.ReadLine());
+            //Console.WriteLine("k: ");
+            //int k = Convert.ToInt32(Console.ReadLine());
+            //int[] b = new int[n];
+            //for (int i = 0; i < n; i++) b[i] = i;
+            //Combinations a = new Combinations(b);
+            //a.A = b;
+            //Console.WriteLine();         
+            //do
+            //{
+            //    a.Print(k);
+            //    a = a.Next(a.A, n, k);
+            //    Console.WriteLine();
+            //} while (a.HasNext(k, n));
+            //a.Print(k);         
         }
     }
 }
