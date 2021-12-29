@@ -260,15 +260,15 @@ namespace DiskretkaDZ
         }
     }
     //подмноежства
-    public class Subsets: CombObj
-    {      
+    public class Subsets : CombObj
+    {
         public Subsets(string info) : base(info)
         { }
         public Subsets Next(int i, string s)
         {
             List<int> a = Index(i, s);
             string s1 = "";
-            for (int j = 0; j < s.Length; j++) 
+            for (int j = 0; j < s.Length; j++)
             {
                 if (a[j] == 1) s1 += s[j];
             }
@@ -288,13 +288,13 @@ namespace DiskretkaDZ
         public List<int> Index(int x, string s)
         {
             List<int> a = new List<int>();
-            while (x != 0) 
+            while (x != 0)
             {
                 if (x % 2 == 1) a.Add(1);
                 else a.Add(0);
                 x /= 2;
             }
-            while(a.Count!=Last(s).INFO.Length)
+            while (a.Count != Last(s).INFO.Length)
             {
                 a.Add(0);
             }
@@ -544,8 +544,8 @@ namespace DiskretkaDZ
             for (int i = 0; i < k; i++) b[i] = 0;
             CombinationsWithRep a = new CombinationsWithRep(b);
             a.Print(k);
-            writer6.WriteLine(a.Print(k));        
-            while(a.HasNext(k, n-1))
+            writer6.WriteLine(a.Print(k));
+            while (a.HasNext(k, n - 1))
             {
                 a = a.Next(b, n);
                 a.Print(k);
