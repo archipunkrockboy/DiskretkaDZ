@@ -259,6 +259,7 @@ namespace DiskretkaDZ
             return s;
         }
     }
+    //подмноежства
     public class Subsets: CombObj
     {      
         public Subsets(string info) : base(info)
@@ -300,7 +301,9 @@ namespace DiskretkaDZ
             a.Reverse();
             return a;
         }
+
     }
+    //сочетания
     public class Combinations
     {
         int[] info;
@@ -316,9 +319,9 @@ namespace DiskretkaDZ
             int[] b = new int[k+2];
             for (int i = 0; i < k; i++) b[i] = a[i];
             b[k] = n; b[k + 1] = 0;
-            for (int i = 0;i<b.Length;i++)
+            for (int i = 0; i < b.Length; i++) 
             {
-                if(b[i]+1 == b[i+1])
+                if (b[i] + 1 == b[i + 1]) 
                 {
                     b[i] = i;
                 }
@@ -333,7 +336,7 @@ namespace DiskretkaDZ
                         t.a = b;
                         return t;
                     }
-                    else return new Combinations();
+                    else return new Combinations();//все сочетания построены
                 }
             }
             return new Combinations(b);
@@ -346,10 +349,15 @@ namespace DiskretkaDZ
             }
             return false;
         }
-        public void Print(int k)
+        public string Print(int k)
         {
+            string s = "";
             for (int i = 0; i < k; i++)
+            {
                 Console.Write("{0} ", info[i]);
+                s += Convert.ToString(info[i]) + " ";
+            }
+            return s;
         }
         public int[]INFO
         { 
@@ -363,85 +371,188 @@ namespace DiskretkaDZ
         }
 
     }
-
+    public class CombinationsWithRep
+    {
+        int[] info;
+        public CombinationsWithRep(int[]a)
+        {
+            this.info = a;
+        }
+        public CombinationsWithRep Next(int[]a, int n)
+        {
+            for (int i = 0; i < a.Length; i++) 
+            {
+                if (a[a.Length - i - 1] < n - 1)
+                {
+                    a[a.Length - i - 1]++; 
+                    for (int j = a.Length-i-1;j<a.Length;j++)
+                    {
+                        a[j] = a[a.Length - i - 1];
+                    }
+                    return new CombinationsWithRep(a);
+                }//самый правый элемент который меньше n-1
+                
+            }
+            return new CombinationsWithRep(a);
+        }
+        public bool HasNext(int k, int a)
+        {
+            CombinationsWithRep t = Last(k, a);
+            for (int i = 0; i < k; i++) 
+            {
+                if (info[i] != t.INFO[i]) return true;
+            }
+            return false;
+        }
+        public CombinationsWithRep Last(int k, int a)
+        {
+            int[] t = new int[k];
+            for (int i = 0; i < k; i++) t[i] = a;
+            return new CombinationsWithRep(t);
+        }
+        public string Print(int k)
+        {
+            string s = "";
+            for (int i = 0; i < k; i++)
+            {
+                Console.Write("{0} ", info[i]);
+                s += Convert.ToString(info[i]) + " ";
+            }
+            return s;
+        }
+        public int[] INFO
+        {
+            get { return info; }
+            set { info = value; }
+        }
+    }
     class Program
     {      
         static void Main(string[] args)
         {
-            //int k = 3;
-            //string s = "";
-            //for (int i = 0; i < k; i++)
-            //{
-            //    s += alph[0];
-            //}
-            //PlacementsWithRep a = new PlacementsWithRep(s);
-            //StreamWriter writer = new StreamWriter("PlacementsWithRep.txt");
-            //writer.WriteLine(a.INFO);
-            //while (a.HasNext(alph[alph.Length - 1], k))
-            //{
-            //    a = a.Next(alph, k);
-            //    Console.WriteLine(a.INFO);
-            //    writer.WriteLine(a.INFO);
-            //}
-            //writer.Close();
+            //записываем размещения с повторениями
+            Console.WriteLine("alph: ");
+            string alph = Console.ReadLine();
+            Console.WriteLine("k: ");
+            int k = Convert.ToInt32(Console.ReadLine());
+            string s = "";
+            for (int i = 0; i < k; i++)
+            {
+                s += alph[0];
+            }
+            PlacementsWithRep a1 = new PlacementsWithRep(s);
+            StreamWriter writer1 = new StreamWriter("PlacementsWithRep.txt");
+            writer1.WriteLine(a1.INFO);
+            while (a1.HasNext(alph[alph.Length - 1], k))
+            {
+                a1 = a1.Next(alph, k);
+                Console.WriteLine(a1.INFO);
+                writer1.WriteLine(a1.INFO);
+            }
+            writer1.Close();
 
-            //Console.WriteLine("Количество элементов: ");
-            //int n = Convert.ToInt32(Console.ReadLine());
-            //char[] s = new char[n];
-            //Console.WriteLine("Заполните алфавит: ");
-            //for (int i = 0; i < n; i++)
-            //{
-            //    s[i] = Convert.ToChar(Console.ReadLine());
-            //}
-            //string alph = "";
-            //Array.Sort(s);
-            //for (int i = 0; i < n; i++)
-            //{
-            //    alph += s[i];
-            //}
-            //Permutations p = new Permutations(alph);
-            //do
-            //{
-            //    Console.WriteLine(p.INFO);
-            //    p = p.Next(p.INFO);
-            //} while ((p.HasNext(alph)));
-            //Console.WriteLine(p.INFO);
 
-            //string alph = "01234";
-            //Placements a = new Placements("012");
-            //a.ALPH = alph;
-            //for (int i = 0; i < 50; i++)
-            //{
-            //    Console.WriteLine(a.INFO);
-            //    a = a.Next(a.ALPH, 3);
-            //}
+            //записываем перестановки
+            Console.WriteLine("Количество элементов: ");
+            int n = Convert.ToInt32(Console.ReadLine());
+            char[] s2 = new char[n];
+            Console.WriteLine("Заполните алфавит: ");
+            for (int i = 0; i < n; i++)
+            {
+                s2[i] = Convert.ToChar(Console.ReadLine());
+            }
+            alph = "";
+            StreamWriter writer2 = new StreamWriter("Permutations.txt");
+            Array.Sort(s2);
+            for (int i = 0; i < n; i++)
+            {
+                alph += s2[i];
+            }
+            Permutations p = new Permutations(alph);
+            do
+            {
+                Console.WriteLine(p.INFO);
+                string r = p.INFO;
+                writer2.WriteLine(r);
+                p = p.Next(p.INFO);
+            }
+            while ((p.HasNext(alph)));
+            writer2.WriteLine(p.INFO);
+            Console.WriteLine(p.INFO);
+            writer2.Close();
 
-            //string s = "abcd";
-            //Subsets a = new Subsets(s);
-            //int j = 0;
-            //while(a.HasNext(s))
-            //{
-            //    a = a.Next(j, s);
-            //    Console.WriteLine(a.INFO);
-            //    j++;
-            //}
 
-            //Console.WriteLine("n: ");
-            //int n = Convert.ToInt32(Console.ReadLine());
-            //Console.WriteLine("k: ");
-            //int k = Convert.ToInt32(Console.ReadLine());
-            //int[] b = new int[n];
-            //for (int i = 0; i < n; i++) b[i] = i;
-            //Combinations a = new Combinations(b);
-            //a.A = b;
-            //Console.WriteLine();         
-            //do
-            //{
-            //    a.Print(k);
-            //    a = a.Next(a.A, n, k);
-            //    Console.WriteLine();
-            //} while (a.HasNext(k, n));
-            //a.Print(k);         
+            //записываем размещения
+            StreamWriter writer3 = new StreamWriter("Placements.txt");
+            Console.WriteLine("alph: ");
+            alph = Console.ReadLine();
+            Placements a3 = new Placements("012");
+            a3.ALPH = alph;
+            for (int i = 0; i < 50; i++)
+            {
+                Console.WriteLine(a3.INFO);
+                writer3.WriteLine(a3.INFO);
+                a3 = a3.Next(a3.ALPH, 3);
+            }
+            writer3.Close();
+
+            //записываем все подмножества
+            Console.WriteLine("alph: ");
+            //string s4 = "abcd";
+            StreamWriter writer4 = new StreamWriter("Subsets.txt");
+            string s4 = Console.ReadLine();
+            Subsets a4 = new Subsets(s4);
+            int j = 0;
+            while (a4.HasNext(s4))
+            {
+
+                a4 = a4.Next(j, s4);
+                Console.WriteLine(a4.INFO);
+                j++;
+            }
+            writer4.Close();
+
+            //записываем все сочетания
+            StreamWriter writer5 = new StreamWriter("Combinations.txt");
+            Console.WriteLine("n: ");
+            n = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("k: ");
+            k = Convert.ToInt32(Console.ReadLine());
+            int[] b5 = new int[n];
+            for (int i = 0; i < n; i++) b5[i] = i;
+            Combinations a5 = new Combinations(b5);
+            a5.A = b5;
+            Console.WriteLine();
+            do
+            {
+                a5.Print(k);
+                writer5.WriteLine(a5.Print(k));
+                a5 = a5.Next(a5.A, n, k);
+                Console.WriteLine();
+            } while (a5.HasNext(k, n));
+            a5.Print(k);
+            writer5.WriteLine(a5.Print(k));
+            writer5.Close();
+
+            //записываем сoчетания с повторениями
+            Console.WriteLine("n: ");
+            StreamWriter writer6 = new StreamWriter("CombinationsWithRep.txt");
+            n = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("k: ");
+            k = Convert.ToInt32(Console.ReadLine());
+            int[] b = new int[k];
+            for (int i = 0; i < k; i++) b[i] = 0;
+            CombinationsWithRep a = new CombinationsWithRep(b);
+            a.Print(k);
+            writer6.WriteLine(a.Print(k));        
+            while(a.HasNext(k, n-1))
+            {
+                a = a.Next(b, n);
+                a.Print(k);
+                writer6.WriteLine(a.Print(k));
+                Console.WriteLine();
+            }
+            writer6.Close();
         }
     }
 }
