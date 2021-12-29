@@ -31,7 +31,7 @@ namespace DiskretkaDZ
             string b = this.INFO;
             for (int i = 0; i < k; i++)
             {
-                if (b[b.Length - 1 - i] == alph[alph.Length - 1])
+                if (b[b.Length - 1 - i] == alph[alph.Length - 1])//равен ли последнему элементу алфавита
                 {
                     b = b.Remove(b.Length - 1 - i, 1);
                     b = b.Insert(b.Length - i, Convert.ToString(alph[0]));
@@ -49,7 +49,7 @@ namespace DiskretkaDZ
             return v;
 
         }
-        public char NextChar(char a, string alph)
+        public char NextChar(char a, string alph)//следующий символ
         {
             for (int i = 0; i < alph.Length; i++)
                 if (a == alph[i]) return alph[i+1];
@@ -80,7 +80,7 @@ namespace DiskretkaDZ
             string s = Convert.ToString(alph[k - 1]);
             string min = "element not found";
             int imin = -1;
-            for (int i = k; i < alph.Length; i++) 
+            for (int i = k; i < alph.Length; i++) //поиск индекса минимума который больше [k-1]
             {
                 if (alph[i] > alph[k - 1])
                 {
@@ -96,7 +96,7 @@ namespace DiskretkaDZ
                     }
                 }
             }
-            if (min != "element not found")
+            if (min != "element not found")//возвращаем новое размещение
             {
                 alph = Swap(alph, k - 1, imin);
                 return new Placements(alph.Remove(k), alph);
@@ -105,7 +105,7 @@ namespace DiskretkaDZ
             {
                 alph = Reverse(alph, k);
                 int right = -1;
-                for (int i = 0; i < k-1; i++)
+                for (int i = 0; i < k-1; i++)//ищем самый правый элемент, сосед которого справа больше 
                 {                
                     if (alph[k - 2 - i] < alph[k - 1 - i])
                     {
@@ -119,7 +119,7 @@ namespace DiskretkaDZ
                     string min1 = "element not found";
                     int imin1 = -1;
                     int j = -1;
-                    for (int i = right; i < alph.Length; i++)
+                    for (int i = right; i < alph.Length; i++)//поиск индекса минимума который больше [rigth]
                     {
                         if (alph[i] > alph[right])
                         {
@@ -194,7 +194,7 @@ namespace DiskretkaDZ
         {
             int right = 0;
             int zap = 0;
-            for (int i = 0; i < alph.Length; i++)
+            for (int i = 0; i < alph.Length; i++)//ищем самый правый такой что: Ai<Ai+1
             {
                 if (alph[Index(alph, this.INFO[this.INFO.Length - i - 2])] < alph[Index(alph, this.INFO[this.INFO.Length - i - 1])])
                 {
@@ -202,7 +202,7 @@ namespace DiskretkaDZ
                     break;
                 }
             }
-            for (int i = 0; i < alph.Length; i++)
+            for (int i = 0; i < alph.Length; i++)//максимальный индекс для которого:Aright<Azap
             {
                 if (alph[right] < alph[Index(alph, this.INFO[alph.Length - i - 1])])
                 {
@@ -316,7 +316,7 @@ namespace DiskretkaDZ
         }
         public Combinations Next(int[]a, int n, int k)
         {
-            int[] b = new int[k+2];
+            int[] b = new int[k+2];//вспомогательлная последовательность длины к+2
             for (int i = 0; i < k; i++) b[i] = a[i];
             b[k] = n; b[k + 1] = 0;
             for (int i = 0; i < b.Length; i++) 
